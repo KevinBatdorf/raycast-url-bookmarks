@@ -1,0 +1,64 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "url-bookmarks",
+  "title": "URL Bookmarks",
+  "description": "Simple extension to keep and search URLs with optional keywords",
+  "icon": "command-icon.png",
+  "author": "KevinBatdorf",
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "index",
+      "title": "Search Saved URLs",
+      "subtitle": "URL Bookmarks",
+      "description": "Search URLs you've saved",
+      "mode": "view"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "trimQueryParams",
+      "type": "checkbox",
+      "label": "Remove both",
+      "required": false,
+      "title": "Query String and Hash",
+      "description": "If checked, the extension will remove the hash and searchParams."
+    },
+    {
+      "name": "preferredBrowser",
+      "type": "dropdown",
+      "required": false,
+      "title": "Preferred Browser (optional)",
+      "description": "If set, the extension will attempt to populate the active URL to quick add.",
+      "data": [
+        {
+          "title": "Select browser...",
+          "value": "not-set"
+        },
+        {
+          "title": "Google Chrome",
+          "value": "chrome"
+        }
+      ]
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.27.0",
+    "run-applescript": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "~16.10.0",
+    "@types/react": "^17.0.28",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "react-devtools": "^4.19.2",
+    "typescript": "^4.4.3"
+  },
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop",
+    "lint": "ray lint"
+  }
+}
