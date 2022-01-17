@@ -10,3 +10,4 @@ TODO
 - Remove hash and params optionally
 - Add press action to open url in browser
 - delete and edit URLs?
+- Custom keywords? It appears there needs to be a second screen to manage keywords
