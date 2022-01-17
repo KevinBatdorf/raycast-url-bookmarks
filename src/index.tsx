@@ -1,6 +1,7 @@
 import { ActionPanel, Form, SubmitFormAction, List, PushAction, getPreferenceValues, Icon } from "@raycast/api";
 import { useEffect, useState } from "react";
-import { runAppleScript } from "run-applescript";
+import urlMetadata from "url-metadata";
+import { getBrowserTabInfo } from "./helpers";
 
 export default function Command() {
   const preferences: Preferences = getPreferenceValues();
@@ -29,33 +30,32 @@ export default function Command() {
 }
 
 const AddUrl = ({ preferences }: { preferences: Preferences }) => {
-  const [url, setUrl] = useState<string>();
-  const [keywords, setKeywords] = useState<string>();
+  const [url, setUrl] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
+  const [summary, setSummary] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [keywords, setKeywords] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    //TODO: Load in data file from support area
-    //TODO: find fuzzy search library
-    //TODO: process active URL
-    //TODO: Check if active URl can break
-    //TODO: Remove hash and params optionally
-    //TODO: Add press action to open url in browser
-    //TODO: delete and edit URLs?
-    //TODO: Get URL snippet??? https://github.com/laurengarcia/url-metadata#readme
-
-    console.log({ preferences });
-    switch (preferences?.preferredBrowser) {
-      case "chrome":
-        runAppleScript('tell application "Google Chrome" to URL of active tab of front window as text').then((url) => {
-          console.log({ url });
-          setUrl(url);
-          setLoading(false);
-        });
-        break;
-      default:
+    if (preferences?.preferredBrowser) {
+      getBrowserTabInfo(preferences.preferredBrowser).then(({ title, url }) => {
+        setTitle(title);
+        setUrl(url);
         setLoading(false);
+      });
     }
   }, []);
+
+  useEffect(() => {
+    if (preferences?.useSiteDescription && url) {
+      urlMetadata(url).then((metadata) => {
+        setDescription(metadata["og:description"] ? metadata["og:description"] : metadata["description"]);
+        setKeywords(metadata["keywords"] ? metadata["keywords"] : "");
+      });
+    }
+  }, [url]);
+
   return (
     <Form
       isLoading={loading}
@@ -67,19 +67,30 @@ const AddUrl = ({ preferences }: { preferences: Preferences }) => {
       }
     >
       <Form.TextField title="URL" id="url" value={url} onChange={setUrl} />
-      <Form.Separator />
       <Form.TextArea
-        title="Keywords"
-        id="name"
-        value={keywords}
-        onChange={setKeywords}
-        placeholder="Enter keywords or a description you want to be searchable."
+        title="Summary"
+        id="summary"
+        value={summary}
+        onChange={setSummary}
+        placeholder="Optionally enter a searchable summary or keywords."
       />
+      <Form.Separator />
+      {preferences?.useTitle && title.length ? (
+        <Form.TextArea title="URL Title" id="title" value={title} onChange={setTitle} />
+      ) : null}
+      {preferences?.useSiteDescription && description.length ? (
+        <Form.TextArea title="URL Description" id="description" value={description} onChange={setDescription} />
+      ) : null}
+      {preferences?.useSiteDescription && keywords.length ? (
+        <Form.TextArea title="URL Keywords" id="keywords" value={keywords} onChange={setKeywords} />
+      ) : null}
     </Form>
   );
 };
 
 interface Preferences {
-  trimQueryParams?: string;
+  useTitle?: boolean;
+  trimQueryParams?: boolean;
+  useSiteDescription?: boolean;
   preferredBrowser?: string;
 }

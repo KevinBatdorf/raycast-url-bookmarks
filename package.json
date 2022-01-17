@@ -19,10 +19,19 @@
     {
       "name": "trimQueryParams",
       "type": "checkbox",
-      "label": "Remove both",
+      "label": "Remove query string and hash",
       "required": false,
-      "title": "Query String and Hash",
-      "description": "If checked, the extension will remove the hash and searchParams."
+      "default": true,
+      "title": "Options",
+      "description": "Remove the hash and searchParams."
+    },
+    {
+      "name": "useSiteDescription",
+      "type": "checkbox",
+      "label": "Use site metadata",
+      "required": false,
+      "default": true,
+      "description": "Ping the URL to try and get the description."
     },
     {
       "name": "preferredBrowser",
@@ -33,18 +42,55 @@
       "data": [
         {
           "title": "Select browser...",
-          "value": "not-set"
+          "value": ""
         },
         {
           "title": "Google Chrome",
-          "value": "chrome"
+          "value": "Google Chrome"
+        },
+        {
+          "title": "Google Chrome Canary",
+          "value": "Google Chrome Canary"
+        },
+        {
+          "title": "Chromium",
+          "value": "Chromium"
+        },
+        {
+          "title": "Brave Browser",
+          "value": "Brave Browser"
+        },
+        {
+          "title": "Vivaldi",
+          "value": "Vivaldi"
+        },
+        {
+          "title": "Safari",
+          "value": "Safari"
+        },
+        {
+          "title": "Safari Technology Preview",
+          "value": "Safari Technology Preview"
+        },
+        {
+          "title": "Webkit",
+          "value": "Webkit"
         }
       ]
+    },
+    {
+      "name": "useTitle",
+      "type": "checkbox",
+      "label": "Use site title",
+      "required": false,
+      "default": true,
+      "description": "Use the title from the browser."
     }
   ],
   "dependencies": {
     "@raycast/api": "^1.27.0",
-    "run-applescript": "^6.0.0"
+    "run-applescript": "^6.0.0",
+    "url-metadata": "^2.5.0"
   },
   "devDependencies": {
     "@types/node": "~16.10.0",
